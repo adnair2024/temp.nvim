@@ -27,19 +27,18 @@ local function insert_template(template_type)
 
         local data = {
             title = input,
-            date = os.date("%Y-%m-%d")
-            timestamp = os.date("%Y-%m-%dT%H:%M:%S-06:00")
-    }
+            date = os.date("%Y-%m-%d"),
+            timestamp = os.date("%Y-%m-%dT%H:%M:%S-06:00"),
+        }
 
-    local lines = templates.render(chosen_template, data)
-    if not lines then
-        vim.notify("No template found for key: " .. chosen_template, vim.log.levels.WARN)
-        return
-    end
+        local lines = templates.render(chosen_template, data)
+        if not lines then
+            vim.notify("No template found for key: " .. chosen_template, vim.log.levels.WARN)
+            return
+        end
 
-    vim.api.nvim_buf_set_lines(0,0,0,false,lines)
-
-        end)
+        vim.api.nvim_buf_set_lines(0, 0, 0, false, lines)
+    end)
 end
 
 function M.setup(opts)
@@ -47,15 +46,15 @@ function M.setup(opts)
     vim.api.nvim_create_user_command("Temp", function(args)
         insert_template(args.args)
     end, {
-            nargs = "?"
-            complete = function()
-                local keys = {}
-            for k, _in pairs(templates.registry) do 
+        nargs = "?",
+        complete = function()
+            local keys = {}
+            for k, _ in pairs(templates.registry) do 
                 table.insert(keys, k)
             end
             return keys
-        end
-        })
+        end,
+    })
 end
 
 return M
